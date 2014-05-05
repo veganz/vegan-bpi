@@ -1,0 +1,87 @@
+/*
+ * Variables
+ */
+
+@light-green: #99ff99;
+@dark-green: #5cb85c;
+
+/*
+ * Global styles
+ */
+
+body {
+  background: @light-green;
+  font-family: 'Open Sans', Arial, serif;
+  padding-bottom: 2em;
+}
+
+/*
+ * Homepage
+ */
+
+.home h1 {
+  font-size: 3.65em;
+  font-weight: 300;
+  margin: 0.75em 0;
+}
+.home h1 span {
+  border-top: 4px solid @dark-green;
+  border-bottom: 4px solid @dark-green;
+  display: inline-block;
+  padding: 0.25em 0.25em 0.4em;
+}
+.bpd-location {
+  font-size: 2em;
+  margin-bottom: 1em;
+}
+.bpd-location-name {
+  display: block;
+}
+.form-inline .form-control {
+  display: inline-block;
+}
+.bpd-location-name .glyphicon {
+  font-size: 0.75em;
+}
+.form-inline .bpd-postal-code {
+  width: 125px;
+}
+.bpd-type {
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 12px;
+  display: block;
+  padding: 1em;
+  transition: background-color 400ms, box-shadow 400ms;
+}
+.bpd-type:hover {
+  background-color: #c4c4c4;
+  box-shadow: 2px 2px 1px #000000;
+}
+.bpd-type img {
+  margin: 0 auto;
+}
+
+/* 
+ * Progressive enhancements
+ * 
+ * Overrides for viewports >320px
+ */
+
+@media (min-width: 360px) {
+  .home h1 {
+    font-size: 4em;
+  }
+}
+
+@media (min-width: 480px) {
+  .home h1 {
+    font-size: 6em;
+  }
+}
+
+@media (min-width: 540px) {
+  .bpd-location-name {
+    display: inline;
+  }
+}
