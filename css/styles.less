@@ -4,21 +4,91 @@
 
 @light-green: #99ff99;
 @dark-green: #5cb85c;
+@light-gray: #c4c4c4;
 
 /*
- * Global styles
+ * Global Styles
  */
 
 body {
   background: @light-green;
   font-family: 'Open Sans', Arial, serif;
-  padding-bottom: 2em;
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+/*
+ * Navbars
+ */
+
+.bpd-navbar {
+  border-color: @dark-green;
+}
+.bpd-navbar .navbar-text {
+  margin-right: 15px;
+}
+
+/*
+ * Panels
+ */
+
+.bpd-panel {
+  border-color: @dark-green;
+  box-shadow: 1px 1px 1px @dark-green;
+}
+
+/*
+ * Glyphs
+ */
+
+.bpd-link-glyph {
+  display: inline-block;
+  margin-right: 0.25em;
+}
+
+/*
+ * BPD Type
+ */
+
+.bpd-type-panel {
+  box-shadow: none;
+}
+.bpd-type-panel .panel-body {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.bpd-type-col {
+  padding-left: 0;
+  padding-right: 0;
+  transition: background-color 800ms;
+}
+.bpd-type-col.active {
+  background-color: @light-gray;
+}
+.bpd-type {
+  display: block;
+  padding: 1em 20px;
+  text-align: center;
+}
+.bpd-type img {
+  margin: 0 auto;
+}
+.bpd-navbar-bottom .bpd-type {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.bpd-navbar-bottom .bpd-type img {
+  width: 45px;
 }
 
 /*
  * Homepage
  */
 
+body.home {
+  padding-top: 0;
+  padding-bottom: 2em;
+}
 .home h1 {
   font-size: 3.65em;
   font-weight: 300;
@@ -46,7 +116,7 @@ body {
 .form-inline .bpd-postal-code {
   width: 125px;
 }
-.bpd-type {
+.home .bpd-type {
   background-color: #ffffff;
   border: 1px solid #000000;
   border-radius: 12px;
@@ -54,16 +124,13 @@ body {
   padding: 1em;
   transition: background-color 400ms, box-shadow 400ms;
 }
-.bpd-type:hover {
-  background-color: #c4c4c4;
+.home .bpd-type:hover {
+  background-color: @light-gray;
   box-shadow: 2px 2px 1px #000000;
-}
-.bpd-type img {
-  margin: 0 auto;
 }
 
 /* 
- * Progressive enhancements
+ * Progressive Enhancements
  * 
  * Overrides for viewports >320px
  */
@@ -83,5 +150,11 @@ body {
 @media (min-width: 540px) {
   .bpd-location-name {
     display: inline;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 2em;
   }
 }

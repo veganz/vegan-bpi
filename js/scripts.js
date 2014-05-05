@@ -29,6 +29,10 @@
     });
   };
   
+  /*
+   * Homepage
+   */
+  
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(location) {
       getLocationByLatLng({
@@ -58,5 +62,22 @@
         }
       }
     });
+  });
+  
+  /*
+   * Results
+   */
+  
+  $('.bpd-location-change').click(function(e) {
+    e.preventDefault();
+  });
+  
+  $('.bpd-type-col .bpd-type').click(function(e) {
+    e.preventDefault();
+    
+    if(!$(this).closest('.bpd-type-col').is('.active')) {
+      $('.bpd-type-col.active').removeClass('active');
+      $(this).closest('.bpd-type-col').addClass('active');
+    }
   });
 })(jQuery);
