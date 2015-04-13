@@ -49,7 +49,7 @@
   }, 
   
   /* API Key for Bing Maps */
-  bingMapsApiKey = 'AqBZXlFkPR_JJ8zsC5TbWiYU0vCucmUJfphXlT5yxjOFbDaVzNm0jqiaSK7G08kP', 
+  bingMapsApiKey = 'AtyTM5gnsQayzc_m7o3XvAmSDUpmRR7BMA0X1LjyuYaAYbc8q0tJOOFuKnfj0Utn', 
   
   /* given one of either lat/lng coordinates or an address string, return the request URL for the Bing Maps API */
   getBingMapsAPIUrl = function(options) {
