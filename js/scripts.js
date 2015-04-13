@@ -23,7 +23,7 @@
           var resourceSet = response.resourceSets[0], 
           resources;
           
-          if(resourceSet && resourceSet.resources && resourceSet.resources.length > 0) {
+          if(resourceSet && resourceSet.resources && resourceSet.resources[0]) {
             resources = resourceSet.resources;
           }
           
@@ -48,8 +48,8 @@
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(location) {
         /* only set location if the user hasn't already manually typed one in */
-        if($('#bpd-postal-code').val() === '') {
-          $('#bpd-postal-code').attr('disabled', 'disabled');
+        if($('.bpd-postal-code').val() === '') {
+          $('.bpd-postal-code').attr('disabled', 'disabled');
           
           getLocations({
             lat: location.coords.latitude, 
@@ -79,14 +79,14 @@
                     noLocation = true;
                   }
                   else {
-                    $('#bpd-postal-code').addClass('hidden');
-                    $('#bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
+                    $('.bpd-postal-code').addClass('hidden');
+                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
                   }
                 }
               }
               
               if(noLocation) {
-                $('#bpd-postal-code').removeAttr('disabled');
+                $('.bpd-postal-code').removeAttr('disabled');
                 
                 /* TODO */
                 /* issue #7: display an error if no results found */
@@ -133,13 +133,13 @@
                     noLocation = true;
                   }
                   else {
-                    $('#bpd-postal-code').addClass('hidden');
-                    $('#bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
+                    $('.bpd-postal-code').addClass('hidden');
+                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
                   }
                 }
               }
               else {
-                $('#bpd-postal-code').removeAttr('disabled');
+                $('.bpd-postal-code').removeAttr('disabled');
                 
                 /* TODO */
                 /* issue #6: display a picklist */
@@ -147,7 +147,7 @@
             }
             
             if(noLocation) {
-              $('#bpd-postal-code').removeAttr('disabled');
+              $('.bpd-postal-code').removeAttr('disabled');
               
               /* TODO */
               /* issue #7: display an error if no results found */
