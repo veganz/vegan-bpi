@@ -116,7 +116,8 @@
             
             if(resourceSet && resourceSet.resources && resourceSet.resources[0]) {
               $.each(resourceSet.resources, function() {
-                if(this.address && this.address.CountryRegion && this.address.CountryRegion === 'United States') {
+                /* only include location if it is in the US */
+                if(this.address && this.address.countryRegion && this.address.countryRegion === 'United States') {
                   if(!resources) {
                     resources = [];
                   }
