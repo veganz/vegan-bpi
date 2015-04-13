@@ -1,38 +1,135 @@
 (function($) {
   'use strict';
   
-  /* API Key for Bing Maps */
-  var bingMapsApiKey = 'AtyTM5gnsQayzc_m7o3XvAmSDUpmRR7BMA0X1LjyuYaAYbc8q0tJOOFuKnfj0Utn', 
+  /* given an address string, return a possible ZIP Code if one is found */
+  var getZIPCodeFromAddress = function(addressString) {
+    var address;
+    
+    if(addressString && $.trim(addressString) !== '') {
+      address = $.trim(addressString);
+    }
+    
+    if(!address) {
+      throw new Error('getZIPCodeFromAddress() -> No address provided');
+    }
+    else {
+      var possibleZIPCode;
+      
+      /* if nothing but a ZIP Code is provided, return it */
+      if(!isNaN(address)) {
+        if(address.length === 5) {
+          possibleZIPCode = address;
+        }
+      }
+      else {
+        /* if a ZIP+4 is provided, return the first 5 digits */
+        var addressSplitOnHypens = address.split('-');
+        if(addressSplitOnHypens.length === 2 && !isNaN(addressSplitOnHypens[0]) && !isNaN(addressSplitOnHypens[1]) && addressSplitOnHypens[0].length === 5) {
+          possibleZIPCode = addressSplitOnHypens[0];
+        }
+        
+        /* for any other string, check the characters after the last space for a possible ZIP Code */
+        var addressSplitOnSpaces = address.split(' ');
+        if(addressSplitOnSpaces.length > 1) {
+          var lastPieceOfString = addressSplitOnSpaces[addressSplitOnSpaces.length - 1];
+          if(!isNaN(lastPieceOfString)) {
+            possibleZIPCode = lastPieceOfString;
+          }
+          else {
+            var lastPieceOfStringSplitOnHypens = lastPieceOfString.split('-');
+            if(lastPieceOfStringSplitOnHypens.length === 2 && !isNaN(lastPieceOfStringSplitOnHypens[0]) && !isNaN(lastPieceOfStringSplitOnHypens[1]) && lastPieceOfStringSplitOnHypens[0].length === 5) {
+              possibleZIPCode = lastPieceOfStringSplitOnHypens[0];
+            }
+          }
+        }
+      }
+      
+      return possibleZIPCode;
+    }
+  }, 
   
-  /* get a list of locations based on one of either lat/lng coordinates or a postal code using the Bing Maps API */
+  /* API Key for Bing Maps */
+  bingMapsApiKey = 'AtyTM5gnsQayzc_m7o3XvAmSDUpmRR7BMA0X1LjyuYaAYbc8q0tJOOFuKnfj0Utn', 
+  
+  /* given one of either lat/lng coordinates or an address string, return the request URL for the Bing Maps API */
+  getBingMapsAPIUrl = function(options) {
+    var settings = $.extend({}, options || {}), 
+    baseUrl = 'http://dev.virtualearth.net/REST/v1/Locations', 
+    lat = settings.lat, 
+    lng = settings.lng, 
+    address;
+    
+    if(settings.address && $.trim(settings.address) !== '') {
+      address = $.trim(settings.address);
+    }
+    
+    if(!((lat && lng) || address)) {
+      throw new Error('getBingMapsAPIUrl() -> No lat/long or address provided');
+    }
+    else {
+      if(lat && lng) {
+        return baseUrl + '/' + lat + ',' + lng + '?o=json&key=' + bingMapsApiKey + '&jsonp=?';
+      }
+      
+      if(address) {
+        var possibleZIPCode = getZIPCodeFromAddress(address);
+        
+        return baseUrl + '?' + (possibleZIPCode ? ('countryRegion=US&postalCode=' + possibleZIPCode) : ('q=' + address)) + '&o=json&key=' + bingMapsApiKey + '&jsonp=?';
+      }
+    }
+  }, 
+  
+  /* get a list of locations based on one of either lat/lng coordinates or an address string using the Bing Maps API */
   getLocations = function(options) {
     var settings = $.extend({
       callback: $.noop
     }, options || {}), 
     lat = settings.lat, 
     lng = settings.lng, 
-    postalCode = settings.postalCode;
+    address, 
+    requestUrl;
     
-    if(lat && lng || postalCode) {
-      $.ajax({
-        dataType: 'jsonp', 
-        url: 'http://dev.virtualearth.net/REST/v1/Locations/' + 
-             (lat && lng ? lat + ',' + lng : 'US/' + postalCode), 
-        data: 'o=json&key=' + bingMapsApiKey + '&jsonp=?', 
-        success: function(response) {
-          var resourceSet = response.resourceSets[0], 
-          resources;
-          
-          if(resourceSet && resourceSet.resources && resourceSet.resources[0]) {
-            resources = resourceSet.resources;
-          }
-          
-          settings.callback(resources);
-        }
-      });
+    if(settings.address && $.trim(settings.address) !== '') {
+      address = $.trim(settings.address);
+    }
+    
+    if(!((lat && lng) || address)) {
+      throw new Error('getLocations() -> No lat/long or address provided');
     }
     else {
-      throw new Error('No lat/long or ZIP Code provided.');
+      requestUrl = getBingMapsAPIUrl({
+        lat: lat, 
+        lng: lng, 
+        address: address
+      });
+      
+      if(!requestUrl) {
+        throw new Error('getLocations() -> requestUrl is undefined');
+      }
+      else {
+        $.ajax({
+          dataType: 'jsonp', 
+          url: requestUrl, 
+          success: function(response) {
+            var resourceSet = response.resourceSets[0], 
+            resources;
+            
+            if(resourceSet && resourceSet.resources && resourceSet.resources[0]) {
+              $.each(resourceSet.resources, function() {
+                if(this.address && this.address.CountryRegion && this.address.CountryRegion === 'United States') {
+                  if(!resources) {
+                    resources = [];
+                  }
+                  
+                  resources.push(this);
+                }
+              });
+            }
+            
+            settings.callback(resources);
+          }
+        });
+      }
     }
   };
   
@@ -80,7 +177,7 @@
                   }
                   else {
                     $('.bpd-postal-code').addClass('hidden');
-                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
+                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
                   }
                 }
               }
@@ -106,7 +203,7 @@
       }
       else {
         getLocations({
-          postalCode: $('.bpd-postal-code').val(), 
+          address: $('.bpd-postal-code').val(), 
           callback: function(locations) {
             var noLocation;
             
@@ -134,7 +231,7 @@
                   }
                   else {
                     $('.bpd-postal-code').addClass('hidden');
-                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '')) : '') + postalCode).removeClass('hidden');
+                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
                   }
                 }
               }
