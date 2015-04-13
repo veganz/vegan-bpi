@@ -263,6 +263,9 @@
   else {
     $('.bpd-location-change').click(function(e) {
       e.preventDefault();
+      
+      /* TODO */
+      /* issue #8: allow user to change city after searching */
     });
     
     $('.bpd-type-col .bpd-type').click(function(e) {
