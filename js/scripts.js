@@ -140,14 +140,14 @@
   
   if($('body').is('.home')) {
     /* give postal code field focus */ 
-    $('.bpd-postal-code').focus();
+    $('.bpi-postal-code').focus();
     
     /* onload, attempt to automatically locate the user if geolocation is supported */
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(location) {
         /* only set location if the user hasn't already manually typed one in */
-        if($('.bpd-postal-code').val() === '') {
-          $('.bpd-postal-code').attr('disabled', 'disabled');
+        if($('.bpi-postal-code').val() === '') {
+          $('.bpi-postal-code').attr('disabled', 'disabled');
           
           getLocations({
             lat: location.coords.latitude, 
@@ -177,14 +177,14 @@
                     noLocation = true;
                   }
                   else {
-                    $('.bpd-postal-code').addClass('hidden');
-                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
+                    $('.bpi-postal-code').addClass('hidden');
+                    $('.bpi-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
                   }
                 }
               }
               
               if(noLocation) {
-                $('.bpd-postal-code').removeAttr('disabled');
+                $('.bpi-postal-code').removeAttr('disabled');
                 
                 /* TODO */
                 /* issue #7: display an error if no results found */
@@ -196,15 +196,15 @@
     }
     
     /* when postal code form is submitted, locate the user */
-    $('.bpd-location-form').submit(function(e) {
+    $('.bpi-location-form').submit(function(e) {
       e.preventDefault();
       
-      if($('.bpd-postal-code').val() === '') {
+      if($('.bpi-postal-code').val() === '') {
         /* TODO */
       }
       else {
         getLocations({
-          address: $('.bpd-postal-code').val(), 
+          address: $('.bpi-postal-code').val(), 
           callback: function(locations) {
             var noLocation;
             
@@ -231,13 +231,13 @@
                     noLocation = true;
                   }
                   else {
-                    $('.bpd-postal-code').addClass('hidden');
-                    $('.bpd-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
+                    $('.bpi-postal-code').addClass('hidden');
+                    $('.bpi-location-city').html((city ? (city + (stateProvince ? (', ' + stateProvince) : '') + ' ') : '') + postalCode);
                   }
                 }
               }
               else {
-                $('.bpd-postal-code').removeAttr('disabled');
+                $('.bpi-postal-code').removeAttr('disabled');
                 
                 /* TODO */
                 /* issue #6: display a picklist */
@@ -245,7 +245,7 @@
             }
             
             if(noLocation) {
-              $('.bpd-postal-code').removeAttr('disabled');
+              $('.bpi-postal-code').removeAttr('disabled');
               
               /* TODO */
               /* issue #7: display an error if no results found */
@@ -261,19 +261,19 @@
    */
   
   else {
-    $('.bpd-location-change').click(function(e) {
+    $('.bpi-location-change').click(function(e) {
       e.preventDefault();
       
       /* TODO */
       /* issue #8: allow user to change city after searching */
     });
     
-    $('.bpd-type-col .bpd-type').click(function(e) {
+    $('.bpi-type-col .bpi-type').click(function(e) {
       e.preventDefault();
       
-      if(!$(this).closest('.bpd-type-col').is('.active')) {
-        $('.bpd-type-col.active').removeClass('active');
-        $(this).closest('.bpd-type-col').addClass('active');
+      if(!$(this).closest('.bpi-type-col').is('.active')) {
+        $('.bpi-type-col.active').removeClass('active');
+        $(this).closest('.bpi-type-col').addClass('active');
       }
     });
   }

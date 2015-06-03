@@ -1,4 +1,4 @@
-vegan-bpd
+vegan-bpi
 =========
 
-Find vegan burgers, pizza, and donuts wherever you are.
+Find vegan burgers, pizza, and ice cream wherever you are.
